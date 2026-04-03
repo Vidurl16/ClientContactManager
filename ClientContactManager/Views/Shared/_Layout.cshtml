@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no, email=no, address=no" />
+    <title>@ViewData["Title"] - CCM</title>
+    <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
+</head>
+<body class="app-shell">
+
+    <nav class="app-navbar">
+        <a class="app-navbar__brand" asp-controller="Clients" asp-action="Index">CCM</a>
+        <ul class="app-navbar__links">
+            <li><a asp-controller="Clients" asp-action="Index">Clients</a></li>
+            <li><a asp-controller="Contacts" asp-action="Index">Contacts</a></li>
+        </ul>
+    </nav>
+
+    <div class="app-main">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        &copy; @DateTime.Now.Year CCM
+    </footer>
+
+    <script src="~/js/validation.js" asp-append-version="true"></script>
+    <script src="~/js/ajax.js" asp-append-version="true"></script>
+    <script src="~/js/tabs.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

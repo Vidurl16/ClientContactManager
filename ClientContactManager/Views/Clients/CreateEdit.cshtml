@@ -1,0 +1,111 @@
+@model ClientContactManager.Models.ClientFormViewModel
+@{
+    ViewData["Title"] = Model.Id == 0 ? "New Client" : "Edit Client";
+    bool isNew = Model.Id == 0;
+    var tabs = new List<(string Id, string Label, bool Active)>
+    {
+        ("general",  "General",    true),
+        ("contacts", "Contact(s)", false),
+    };
+}
+
+<div class="page-header">
+    <h2>@ViewData["Title"]</h2>
+    <a asp-action="Index" class="btn btn-secondary">Back to Clients</a>
+</div>
+
+<partial name="_ValidationSummary" />
+
+<partial name="_FormTabs" model="@tabs" />
+
+<div class="tab-content">
+
+    <!-- General Tab -->
+    <div class="tab-pane fade show active" id="general" role="tabpanel">
+        <div class="form-card">
+            <form id="client-form" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div class="form-field">
+                    <label for="clientName" class="form-label">Name <span class="required-marker">*</span></label>
+                    <input type="text" class="form-control" id="clientName" name="Name"
+                           value="@Model.Name" maxlength="200" autocomplete="off" />
+                    <div class="invalid-feedback">Name is required.</div>
+                </div>
+
+                @if (!isNew)
+                {
+                    <div class="form-field">
+                        <label class="form-label">Client Code</label>
+                        <input type="text" class="form-control" value="@Model.ClientCode" readonly />
+                    </div>
+                }
+
+                <button type="submit" class="btn btn-primary" id="save-btn">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contact(s) Tab -->
+    <div class="tab-pane fade" id="contacts" role="tabpanel">
+        @if (isNew)
+        {
+            <p class="text-muted">Save the client first to manage contacts.</p>
+        }
+        else
+        {
+            <div class="link-row">
+                <select class="form-select" id="contact-select" style="max-width:350px">
+                    <option value="">-- Select a contact to link --</option>
+                    @foreach (var c in Model.AvailableContacts)
+                    {
+                        <option value="@c.Id">@c.Surname @c.Name</option>
+                    }
+                </select>
+                <button class="btn btn-outline-primary" id="link-btn" type="button">Link</button>
+            </div>
+
+            <p id="no-contacts-msg" class="empty-state @(Model.LinkedContacts.Any() ? "d-none" : "")">No contact(s) found.</p>
+
+            <table class="app-table table-card @(!Model.LinkedContacts.Any() ? "d-none" : "")" id="contacts-table">
+                <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="contacts-tbody">
+                    @foreach (var c in Model.LinkedContacts)
+                    {
+                        <tr data-contact-id="@c.Id">
+                            <td>@c.Surname @c.Name</td>
+                            <td>@c.Email</td>
+                            <td class="col-end">
+                                <button class="btn btn-sm btn-outline-danger unlink-btn"
+                                        data-contact-id="@c.Id"
+                                        data-contact-name="@(c.Surname + " " + c.Name)"
+                                        type="button">Unlink</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/clients.js" asp-append-version="true"></script>
+    <script>
+        window.clientsConfig = {
+            clientId:  @Model.Id,
+            isNew:     @(isNew ? "true" : "false"),
+            createUrl: '@Url.Action("Create")',
+            editUrl:   '@Url.Action("Edit", new { id = Model.Id })',
+            linkUrl:   '@Url.Action("LinkContact")',
+            unlinkUrl: '@Url.Action("UnlinkContact")'
+        };
+    </script>
+}

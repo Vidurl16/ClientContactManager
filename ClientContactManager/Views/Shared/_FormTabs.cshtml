@@ -1,0 +1,16 @@
+@model List<(string Id, string Label, bool Active)>
+<ul class="nav nav-tabs mb-3" role="tablist">
+    @foreach (var tab in Model)
+    {
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(tab.Active ? "active" : "")"
+                    id="@(tab.Id)-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#@tab.Id"
+                    type="button"
+                    role="tab"
+                    aria-controls="@tab.Id"
+                    aria-selected="@(tab.Active ? "true" : "false")">@tab.Label</button>
+        </li>
+    }
+</ul>

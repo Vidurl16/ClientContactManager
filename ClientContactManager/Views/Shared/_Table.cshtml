@@ -1,0 +1,9 @@
+@model List<(string Label, string Align)>
+<thead>
+    <tr>
+        @foreach (var col in Model)
+        {
+            <th class="@(col.Align == "center" ? "col-center" : col.Align == "end" ? "col-end" : "")">@col.Label</th>
+        }
+    </tr>
+</thead>

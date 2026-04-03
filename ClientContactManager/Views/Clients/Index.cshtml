@@ -1,0 +1,38 @@
+@model List<ClientContactManager.Models.ClientIndexItemViewModel>
+@{
+    ViewData["Title"] = "Clients";
+    var columns = new List<(string Label, string Align)>
+    {
+        ("Name",           "start"),
+        ("Client Code",    "start"),
+        ("No. of Contacts","center"),
+    };
+}
+
+<div class="page-header">
+    <h2>Clients</h2>
+    <a asp-action="Create" class="btn btn-primary">+ New Client</a>
+</div>
+
+@if (!Model.Any())
+{
+    <partial name="_EmptyState" model="@("No client(s) found.")" />
+}
+else
+{
+    <div class="table-card">
+        <table class="app-table">
+            <partial name="_Table" model="@columns" />
+            <tbody>
+                @foreach (var client in Model)
+                {
+                    <tr class="clickable-row" onclick="window.location='@Url.Action("Edit", new { id = client.Id })'">
+                        <td>@client.Name</td>
+                        <td>@client.ClientCode</td>
+                        <td class="col-center">@client.ContactCount</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,116 @@
+@model ClientContactManager.Models.ContactFormViewModel
+@{
+    ViewData["Title"] = Model.Id == 0 ? "New Contact" : "Edit Contact";
+    bool isNew = Model.Id == 0;
+    var tabs = new List<(string Id, string Label, bool Active)>
+    {
+        ("general", "General",   true),
+        ("clients", "Client(s)", false),
+    };
+}
+
+<div class="page-header">
+    <h2>@ViewData["Title"]</h2>
+    <a asp-action="Index" class="btn btn-secondary">Back to Contacts</a>
+</div>
+
+<partial name="_ValidationSummary" />
+
+<partial name="_FormTabs" model="@tabs" />
+
+<div class="tab-content">
+
+    <!-- General Tab -->
+    <div class="tab-pane fade show active" id="general" role="tabpanel">
+        <div class="form-card">
+            <form id="contact-form" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div class="form-field">
+                    <label for="contactName" class="form-label">Name <span class="required-marker">*</span></label>
+                    <input type="text" class="form-control" id="contactName" name="Name"
+                           value="@Model.Name" maxlength="100" autocomplete="off" />
+                    <div class="invalid-feedback">Name is required.</div>
+                </div>
+
+                <div class="form-field">
+                    <label for="contactSurname" class="form-label">Surname <span class="required-marker">*</span></label>
+                    <input type="text" class="form-control" id="contactSurname" name="Surname"
+                           value="@Model.Surname" maxlength="100" autocomplete="off" />
+                    <div class="invalid-feedback">Surname is required.</div>
+                </div>
+
+                <div class="form-field">
+                    <label for="contactEmail" class="form-label">Email <span class="required-marker">*</span></label>
+                    <input type="text" class="form-control" id="contactEmail" name="Email"
+                           value="@Model.Email" maxlength="150" autocomplete="off" />
+                    <div class="invalid-feedback" id="email-feedback">Email is required.</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="save-btn">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Client(s) Tab -->
+    <div class="tab-pane fade" id="clients" role="tabpanel">
+        @if (isNew)
+        {
+            <p class="text-muted">Save the contact first to manage clients.</p>
+        }
+        else
+        {
+            <div class="link-row">
+                <select class="form-select" id="client-select" style="max-width:350px">
+                    <option value="">-- Select a client to link --</option>
+                    @foreach (var c in Model.AvailableClients)
+                    {
+                        <option value="@c.Id">@c.Name</option>
+                    }
+                </select>
+                <button class="btn btn-outline-primary" id="link-btn" type="button">Link</button>
+            </div>
+
+            <p id="no-clients-msg" class="empty-state @(Model.LinkedClients.Any() ? "d-none" : "")">No contact(s) found.</p>
+
+            <table class="app-table table-card @(!Model.LinkedClients.Any() ? "d-none" : "")" id="clients-table">
+                <thead>
+                    <tr>
+                        <th>Client Name</th>
+                        <th>Client Code</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="clients-tbody">
+                    @foreach (var c in Model.LinkedClients)
+                    {
+                        <tr data-client-id="@c.Id">
+                            <td>@c.Name</td>
+                            <td>@c.ClientCode</td>
+                            <td class="col-end">
+                                <button class="btn btn-sm btn-outline-danger unlink-btn"
+                                        data-client-id="@c.Id"
+                                        type="button">Unlink</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/contacts.js" asp-append-version="true"></script>
+    <script>
+        window.contactsConfig = {
+            contactId: @Model.Id,
+            isNew:     @(isNew ? "true" : "false"),
+            createUrl: '@Url.Action("Create")',
+            editUrl:   '@Url.Action("Edit", new { id = Model.Id })',
+            linkUrl:   '@Url.Action("LinkClient")',
+            unlinkUrl: '@Url.Action("UnlinkClient")'
+        };
+    </script>
+}
