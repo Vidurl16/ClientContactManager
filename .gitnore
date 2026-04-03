@@ -1,0 +1,21 @@
+# Visual Studio / Rider / IDE
+.vs/
+*.user
+*.suo
+*.sln.docstates
+.idea/
+
+# Build output
+bin/
+obj/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# NPM / libraries if any (optional, since you removed wwwroot/lib)
+node_modules/
+wwwroot/lib/
