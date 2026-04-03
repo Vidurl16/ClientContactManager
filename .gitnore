@@ -1,21 +1,20 @@
-# Visual Studio / Rider / IDE
-.vs/
-*.user
-*.suo
-*.sln.docstates
-.idea/
-
-# Build output
+# Ignore build output
 bin/
 obj/
+
+# Ignore Rider / VS / IDE files
+.vs/
+.idea/
+*.suo
+*.user
+*.sln.docstates
 
 # Logs
 *.log
 
-# OS
+# OS files
 .DS_Store
 Thumbs.db
 
-# NPM / libraries if any (optional, since you removed wwwroot/lib)
-node_modules/
+# Ignore any local libraries (since we removed wwwroot/lib)
 wwwroot/lib/
