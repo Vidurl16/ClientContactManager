@@ -1,0 +1,30 @@
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: client_contact_manager
+      MYSQL_USER: ccm_user
+      MYSQL_PASSWORD: ccm_password123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "ccm_user", "-pccm_password123"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      ConnectionStrings__DefaultConnection: "server=db;database=client_contact_manager;user=ccm_user;password=ccm_password123;"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
