@@ -157,9 +157,9 @@ flowchart LR
     end
 
     CC -->|depends on| IS
-    IS <|.. CS : implements
-    IS <|.. MC : implements
-    IS <|.. CAC : implements
+    CS -->|implements| IS
+    MC -->|implements| IS
+    CAC -->|implements| IS
     DI[DI Container\nProgram.cs] -.->|injects| CC
 ```
 
