@@ -1,0 +1,9 @@
+bin/
+obj/
+.vs/
+.idea/
+*.user
+*.log
+.DS_Store
+ClientContactManager.Tests/
+TestResults/

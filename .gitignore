@@ -30,9 +30,6 @@ Thumbs.db
 publish/
 out/
 
-# Docker
-.dockerignore
-
 # Test results
 TestResults/
 coverage/

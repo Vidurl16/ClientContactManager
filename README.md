@@ -22,10 +22,12 @@ A full-stack web application for managing clients and their contacts in a many-t
 **Prerequisites:** [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 ```bash
+git clone https://github.com/Vidurl16/ClientContactManager.git
+cd ClientContactManager
 docker compose up --build
 ```
 
-Open `http://localhost:8080` in your browser. The database is created and migrated automatically.
+Open `http://localhost:8080`. The database is created and migrated automatically — nothing else to install or configure.
 
 ---
 
